@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 2rem; font-weight: 600;">Submit Student Evaluation</h2>
+
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<form method="post" style="max-width: 700px; margin: auto;">
+  {% csrf_token %}
+  <div style="margin-bottom: 1.5rem;">
+    <label for="id_student"><strong>Select Student (Matric Number)</strong></label><br>
+    {{ form.student }}
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+    <div>
+      <label for="id_introduction">Introduction / Background (5)</label>
+      {{ form.introduction }}
+    </div>
+    <div>
+      <label for="id_problem_statement">Statement of Problem / Research Gap (5)</label>
+      {{ form.problem_statement }}
+    </div>
+    <div>
+      <label for="id_objectives">Aim & Objectives (5)</label>
+      {{ form.objectives }}
+    </div>
+    <div>
+      <label for="id_methodology">Methodology (5)</label>
+      {{ form.methodology }}
+    </div>
+    <div>
+      <label for="id_architecture">Model / Architecture (5)</label>
+      {{ form.architecture }}
+    </div>
+    <div>
+      <label for="id_significance">Significance / Expected Contribution (5)</label>
+      {{ form.significance }}
+    </div>
+    <div>
+      <label for="id_related_works">Related Works (5)</label>
+      {{ form.related_works }}
+    </div>
+    <div>
+      <label for="id_design_analysis">Design / Analysis (5)</label>
+      {{ form.design_analysis }}
+    </div>
+    <div style="grid-column: span 2;">
+      <label for="id_implementation">Implementation / Result (10)</label><br>
+      {{ form.implementation }}
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <button type="submit">Submit Score</button>
+  </div>
+</form>
+{% endblock %}

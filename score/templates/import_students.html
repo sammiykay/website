@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 2rem;">Import Students from Excel</h2>
+
+<div style="max-width: 500px; margin: auto;">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 1.5rem;">
+      <label for="id_file">Upload Excel File</label>
+      <div class="file-upload">
+        <input type="file" name="file" id="fileInput" accept=".xlsx, .xls" required hidden>
+        <label for="fileInput" class="file-label">📁 Choose Excel File</label>
+        <span id="fileName" class="file-name">No file chosen</span>
+      </div>      
+    </div>
+
+    <button type="submit">Upload</button>
+  </form>
+
+  <div style="margin-top: 2rem; background-color: #f1f5f9; padding: 1rem; border-radius: 8px;">
+    <p><strong>Expected Excel Format:</strong></p>
+    <ul style="padding-left: 1.2rem;">
+      <li><code>Full Name</code></li>
+      <li><code>Matric Number</code></li>
+      <li><code>Project Topic</code></li>
+      <li><code>Department</code></li>
+    </ul>
+    <p>The first row should contain these headers. Data should start from the second row.</p>
+  </div>
+</div>
+{% endblock %}

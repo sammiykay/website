@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-bottom: 1.5rem;">Evaluator Registration</h2>
+
+<form method="post" style="max-width: 500px; margin: auto;">
+  {% csrf_token %}
+  {% if form.errors %}
+    <ul style="color: red;">
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div style="margin-bottom: 1rem;">
+    <label for="id_username">Username</label><br>
+    {{ form.username }}
+  </div>
+
+  <div style="margin-bottom: 1rem;">
+    <label for="id_email">Email (optional)</label><br>
+    {{ form.email }}
+  </div>
+
+  <div style="margin-bottom: 1rem;">
+    <label for="id_password1">Password</label><br>
+    {{ form.password1 }}
+  </div>
+
+  <div style="margin-bottom: 1.5rem;">
+    <label for="id_password2">Confirm Password</label><br>
+    {{ form.password2 }}
+  </div>
+
+  <button type="submit">Register</button>
+
+  <p style="margin-top: 1.5rem; text-align:center;">
+    Already have an account? <a href="{% url 'login_view' %}">Login here</a>
+  </p>
+</form>
+{% endblock %}

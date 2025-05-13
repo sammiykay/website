@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 2rem; font-weight: 600;">Coordinator Dashboard</h2>
+
+<div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+    <a href="{% url 'download_results' %}">
+        <button style="background-color: #047857;">⬇ Download Scores (CSV)</button>
+    </a>
+    <a href="{% url 'import_students' %}">
+        <button style="background-color: #9333ea;">⬆ Import Students</button>
+    </a>
+</div>
+
+{% if results %}
+<div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; overflow: hidden;">
+        <thead style="background-color: #f1f5f9;">
+            <tr style="text-align: left;">
+                <th style="padding: 12px;">#</th>
+                <th style="padding: 12px;">Matric Number</th>
+                <th style="padding: 12px;">Full Name</th>
+                <th style="padding: 12px;">Department</th>
+                <th style="padding: 12px;">Project Topic</th>
+                <th style="padding: 12px;">Total Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr style="border-top: 1px solid #e5e7eb; background-color: {% cycle '#ffffff' '#f9fafb' %};">
+                <td style="padding: 12px;">{{ forloop.counter }}</td>
+                <td style="padding: 12px;">{{ result.matric_number }}</td>
+                <td style="padding: 12px;">{{ result.full_name }}</td>
+                <td style="padding: 12px;">{{ result.department }}</td>
+                <td style="padding: 12px;">{{ result.project_topic }}</td>
+                <td style="padding: 12px; font-weight: bold;">{{ result.total_score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+  <p style="text-align: center; color: #6b7280;">No student evaluations found yet.</p>
+{% endif %}
+{% endblock %}
