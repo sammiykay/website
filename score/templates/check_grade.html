@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 2rem;">Check Your Project Grade</h2>
+
+<div style="max-width: 500px; margin: auto;">
+  <form method="post">
+    {% csrf_token %}
+    <label for="matric_number">Enter Your Matric Number</label>
+    <input type="text" name="matric_number" id="matric_number" placeholder="e.g., CSC200123" required>
+    <button type="submit">Check Grade</button>
+  </form>
+
+  {% if error %}
+    <p style="color: red; margin-top: 1rem;">{{ error }}</p>
+  {% endif %}
+
+  {% if result %}
+  <div style="margin-top: 2rem; background-color: #f1f5f9; padding: 1rem; border-radius: 8px;">
+    <p><strong>Full Name:</strong> {{ result.full_name }}</p>
+    <p><strong>Matric Number:</strong> {{ result.matric_number }}</p>
+    <p><strong>Department:</strong> {{ result.department }}</p>
+    <p><strong>Project Topic:</strong> {{ result.project_topic }}</p>
+    <p><strong>Total Score:</strong>
+      {% if result.total_score == "Awaiting Result" %}
+        <span style="color: #b45309;">Awaiting Result</span>
+      {% else %}
+        <span style="font-size: 1.2rem; font-weight: bold;">{{ result.total_score }}</span>
+      {% endif %}
+    </p>
+  </div>
+{% endif %}
+
+</div>
+{% endblock %}

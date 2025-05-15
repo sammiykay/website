@@ -4,6 +4,13 @@
 <h2 style="text-align:center; margin-bottom: 1.5rem;">Evaluator Login</h2>
 
 <form method="post" style="max-width: 400px; margin: auto;">
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
   {% csrf_token %}
   {% if form.non_field_errors %}
     <p style="color: red;">{{ form.non_field_errors }}</p>

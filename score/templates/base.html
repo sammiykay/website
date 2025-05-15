@@ -111,7 +111,7 @@
         select,
         textarea {
             width: 100%;
-            padding: 10px 3px;
+            padding: 10px 7px;
             margin-top: 4px;
             margin-bottom: 12px;
             border: 1px solid #d1d5db;
@@ -170,17 +170,19 @@
     <header>
         <h1>Student Evaluation Portal</h1>
         <nav>
+            <a href="{% url 'check_grade' %}">Check Grade</a>
+        
             {% if user.is_authenticated %}
-            <a href="{% url 'submit_score' %}">Submit Score</a>
-            {% if user.is_superuser %}
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'import_students' %}">Import Students</a>
-            <a href="{% url 'download_results' %}">Download Scores</a>
-            {% endif %}
-            <a href="{% url 'logout_view' %}">Logout</a>
+                <a href="{% url 'submit_score' %}">Submit Score</a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'import_students' %}">Import Students</a>
+                    <a href="{% url 'download_results' %}">Download Scores</a>
+                {% endif %}
+                <a href="{% url 'logout_view' %}">Logout</a>
             {% else %}
-            <a href="{% url 'login_view' %}">Login</a>
-            <a href="{% url 'register_view' %}">Register</a>
+                <a href="{% url 'login_view' %}">Login</a>
+                <a href="{% url 'register_view' %}">Register</a>
             {% endif %}
         </nav>
     </header>

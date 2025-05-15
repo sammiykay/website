@@ -27,6 +27,8 @@ def submit_score(request):
             existing_eval = Evaluation.objects.filter(evaluator=request.user, student=student).first()
             if existing_eval:
                 messages.error(request, 'You have already scored this student.')
+            elif Evaluation.objects.filter(student=student).count() >= 4:
+                messages.error(request, 'This student has already been evaluated by 4 evaluators.')
             else:
                 evaluation = form.save(commit=False)
                 evaluation.evaluator = request.user
@@ -42,16 +44,26 @@ def submit_score(request):
 def coordinator_dashboard(request):
     students = Student.objects.all()
     results = []
+
     for student in students:
         evaluations = Evaluation.objects.filter(student=student)
-        total = sum(e.total_score for e in evaluations)
+        evaluator_count = evaluations.count()
+
+        if evaluator_count == 4:
+            total_score = sum(e.total_score for e in evaluations)
+            average_score = round(total_score / 4, 2)
+            score_display = f"{average_score} / 100"
+        else:
+            score_display = "Awaiting Result"
+
         results.append({
             'matric_number': student.matric_number,
             'full_name': student.full_name,
             'project_topic': student.project_topic,
             'department': student.department,
-            'total_score': total
+            'total_score': score_display
         })
+
     return render(request, 'dashboard.html', {'results': results})
 
 @login_required
@@ -66,8 +78,12 @@ def download_results_csv(request):
 
     for student in students:
         evaluations = Evaluation.objects.filter(student=student)
-        total = sum(e.total_score for e in evaluations)
-        writer.writerow([student.matric_number, student.project_topic, student.department, total])
+        if evaluations.count() == 4:
+            total_score = sum(e.total_score for e in evaluations)
+            average_score = round(total_score / 4, 2)
+            writer.writerow([student.matric_number, student.project_topic, student.department, average_score])
+        else:
+            writer.writerow([student.matric_number, student.project_topic, student.department, "Awaiting Result"])
 
     return response
 
@@ -161,3 +177,32 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Logged out successfully.")
     return redirect('login_view')
+def check_grade(request):
+    result = None
+    error = None
+
+    if request.method == 'POST':
+        matric_number = request.POST.get('matric_number').strip().upper()
+        try:
+            student = Student.objects.get(matric_number=matric_number)
+            evaluations = Evaluation.objects.filter(student=student)
+            evaluator_count = evaluations.count()
+
+            if evaluator_count == 4:
+                total_score = sum(e.total_score for e in evaluations)
+                average_score = round(total_score / 4, 2)
+                score_display = f"{average_score} / 100"
+            else:
+                score_display = "Awaiting Result"
+
+            result = {
+                'full_name': student.full_name,
+                'matric_number': student.matric_number,
+                'project_topic': student.project_topic,
+                'department': student.department,
+                'total_score': score_display
+            }
+        except Student.DoesNotExist:
+            error = "Matric number not found. Please check and try again."
+
+    return render(request, 'check_grade.html', {'result': result, 'error': error})
