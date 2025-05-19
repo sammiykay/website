@@ -12,34 +12,55 @@
     </a>
 </div>
 
-{% if results %}
+{% if page_obj %}
 <div style="overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; overflow: hidden;">
+    <table
+        style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; overflow: hidden;">
         <thead style="background-color: #f1f5f9;">
-            <tr style="text-align: left;">
-                <th style="padding: 12px;">#</th>
-                <th style="padding: 12px;">Matric Number</th>
-                <th style="padding: 12px;">Full Name</th>
-                <th style="padding: 12px;">Department</th>
-                <th style="padding: 12px;">Project Topic</th>
-                <th style="padding: 12px;">Total Score</th>
+            <tr>
+                <th>#</th>
+                <th>Matric Number</th>
+                <th>Full Name</th>
+                <th>Department</th>
+                <th>Project Topic</th>
+                <th>Total Score</th>
+                <th>Lecturers Remaining</th> <!-- ✅ New Column -->
             </tr>
         </thead>
+
         <tbody>
-            {% for result in results %}
+            {% for result in page_obj %}
             <tr style="border-top: 1px solid #e5e7eb; background-color: {% cycle '#ffffff' '#f9fafb' %};">
-                <td style="padding: 12px;">{{ forloop.counter }}</td>
-                <td style="padding: 12px;">{{ result.matric_number }}</td>
-                <td style="padding: 12px;">{{ result.full_name }}</td>
-                <td style="padding: 12px;">{{ result.department }}</td>
-                <td style="padding: 12px;">{{ result.project_topic }}</td>
-                <td style="padding: 12px; font-weight: bold;">{{ result.total_score }}</td>
+                <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td>{{ result.matric_number }}</td>
+                <td>{{ result.full_name }}</td>
+                <td>{{ result.department }}</td>
+                <td>{{ result.project_topic }}</td>
+                <td><strong>{{ result.total_score }}</strong></td>
+                <td style="color: {% if result.remaining == 0 %}green{% else %}red{% endif %};">
+                    {{ result.remaining }}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
+
     </table>
+    <div style="margin-top: 1.5rem; text-align: center;">
+  <div style="display: inline-flex; gap: 0.5rem;">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}"><button>&laquo; Prev</button></a>
+    {% endif %}
+
+    <span style="padding: 0.5rem 1rem;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}"><button>Next &raquo;</button></a>
+    {% endif %}
+  </div>
 </div>
+</div>
+
 {% else %}
-  <p style="text-align: center; color: #6b7280;">No student evaluations found yet.</p>
+<p style="text-align: center; color: #6b7280;">No student evaluations found yet.</p>
 {% endif %}
 {% endblock %}

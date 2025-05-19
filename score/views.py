@@ -14,7 +14,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import EvaluatorRegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.core.paginator import Paginator
 def is_coordinator(user):
     return user.is_superuser  # You can customize this check
 
@@ -39,15 +39,17 @@ def submit_score(request):
         form = EvaluationForm()
     return render(request, 'submit_score.html', {'form': form})
 
+
 @login_required
 @user_passes_test(is_coordinator)
 def coordinator_dashboard(request):
-    students = Student.objects.all()
+    student_list = Student.objects.all()
     results = []
 
-    for student in students:
+    for student in student_list:
         evaluations = Evaluation.objects.filter(student=student)
         evaluator_count = evaluations.count()
+        evaluators_remaining = 4 - evaluator_count
 
         if evaluator_count == 4:
             total_score = sum(e.total_score for e in evaluations)
@@ -61,10 +63,15 @@ def coordinator_dashboard(request):
             'full_name': student.full_name,
             'project_topic': student.project_topic,
             'department': student.department,
-            'total_score': score_display
+            'total_score': score_display,
+            'remaining': evaluators_remaining
         })
 
-    return render(request, 'dashboard.html', {'results': results})
+    paginator = Paginator(results, 10)  # Show 10 students per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'dashboard.html', {'page_obj': page_obj})
 
 @login_required
 @user_passes_test(is_coordinator)
@@ -172,11 +179,14 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
+
 @login_required
 def logout_view(request):
     logout(request)
     messages.info(request, "Logged out successfully.")
     return redirect('login_view')
+
+
 def check_grade(request):
     result = None
     error = None
@@ -191,7 +201,7 @@ def check_grade(request):
             if evaluator_count == 4:
                 total_score = sum(e.total_score for e in evaluations)
                 average_score = round(total_score / 4, 2)
-                score_display = f"{average_score} / 100"
+                score_display = f"{average_score} / 50"
             else:
                 score_display = "Awaiting Result"
 
