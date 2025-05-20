@@ -210,11 +210,12 @@
             <a href="{% url 'dashboard' %}">Dashboard</a>
             <a href="{% url 'import_students' %}">Import Students</a>
             <a href="{% url 'download_results' %}">Download Scores</a>
+            <a href="{% url 'register_view' %}">Register Lecturer</a>
             {% endif %}
             <a href="{% url 'logout_view' %}">Logout</a>
         {% else %}
             <a href="{% url 'login_view' %}">Login</a>
-            <a href="{% url 'register_view' %}">Register</a>
+            
         {% endif %}
         </nav>
   </header>

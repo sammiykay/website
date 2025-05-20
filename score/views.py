@@ -149,8 +149,8 @@ def import_students_from_excel(request):
 
     return render(request, 'import_students.html')
 
-
-
+@login_required
+@user_passes_test(is_coordinator)
 def register_view(request):
     if request.method == 'POST':
         form = EvaluatorRegistrationForm(request.POST)
