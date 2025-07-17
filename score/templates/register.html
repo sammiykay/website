@@ -1,44 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align:center; margin-bottom: 1.5rem;">Evaluator Registration</h2>
+<div class="card-header">
+  <h1 class="card-title">
+    <i class="fas fa-user-plus"></i>
+    Evaluator Registration
+  </h1>
+</div>
 
 <form method="post" style="max-width: 500px; margin: auto;">
   {% csrf_token %}
   {% if form.errors %}
-    <ul style="color: red;">
+    <div class="messages">
       {% for field in form %}
         {% for error in field.errors %}
           <li>{{ field.label }}: {{ error }}</li>
         {% endfor %}
       {% endfor %}
-    </ul>
+    </div>
   {% endif %}
 
-  <div style="margin-bottom: 1rem;">
-    <label for="id_username">Username</label><br>
-    {{ form.username }}
+  <div class="form-group">
+    <label for="id_username" class="form-label">
+      <i class="fas fa-user"></i>
+      Username
+    </label>
+    <input type="text" name="username" id="id_username" class="form-control" 
+           placeholder="Choose a username" required 
+           value="{{ form.username.value|default:'' }}">
   </div>
 
-  <div style="margin-bottom: 1rem;">
-    <label for="id_email">Email (optional)</label><br>
-    {{ form.email }}
+  <div class="form-group">
+    <label for="id_email" class="form-label">
+      <i class="fas fa-envelope"></i>
+      Email (optional)
+    </label>
+    <input type="email" name="email" id="id_email" class="form-control" 
+           placeholder="Enter your email address" 
+           value="{{ form.email.value|default:'' }}">
   </div>
 
-  <div style="margin-bottom: 1rem;">
-    <label for="id_password1">Password</label><br>
-    {{ form.password1 }}
+  <div class="form-group">
+    <label for="id_password1" class="form-label">
+      <i class="fas fa-lock"></i>
+      Password
+    </label>
+    <input type="password" name="password1" id="id_password1" class="form-control" 
+           placeholder="Create a password" required>
   </div>
 
-  <div style="margin-bottom: 1.5rem;">
-    <label for="id_password2">Confirm Password</label><br>
-    {{ form.password2 }}
+  <div class="form-group">
+    <label for="id_password2" class="form-label">
+      <i class="fas fa-lock"></i>
+      Confirm Password
+    </label>
+    <input type="password" name="password2" id="id_password2" class="form-control" 
+           placeholder="Confirm your password" required>
   </div>
 
-  <button type="submit">Register</button>
+  <div style="text-align: center;">
+    <button type="submit" class="btn">
+      <i class="fas fa-user-plus"></i>
+      Register
+    </button>
+  </div>
 
-  <p style="margin-top: 1.5rem; text-align:center;">
-    Already have an account? <a href="{% url 'login_view' %}">Login here</a>
-  </p>
+  <div style="margin-top: 2rem; text-align: center; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
+    <p style="color: var(--gray-600); margin-bottom: 0.5rem;">Already have an account?</p>
+    <a href="{% url 'login_view' %}" class="btn btn-secondary">
+      <i class="fas fa-sign-in-alt"></i>
+      Login here
+    </a>
+  </div>
 </form>
 {% endblock %}

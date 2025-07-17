@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align: center; margin-bottom: 2rem;">Import Students from Excel</h2>
+<div class="card-header">
+  <h1 class="card-title">
+    <i class="fas fa-upload"></i>
+    Import Students from Excel
+  </h1>
+</div>
 
-<div style="max-width: 500px; margin: auto;">
+<div style="max-width: 600px; margin: auto;">
   {% if messages %}
     <ul class="messages">
       {% for message in messages %}
@@ -15,27 +20,47 @@
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div style="margin-bottom: 1.5rem;">
-      <label for="id_file">Upload Excel File</label>
+    <div class="form-group">
+      <label for="id_file" class="form-label">
+        <i class="fas fa-file-excel"></i>
+        Upload Excel File
+      </label>
       <div class="file-upload">
         <input type="file" name="file" id="fileInput" accept=".xlsx, .xls" required hidden>
-        <label for="fileInput" class="file-label">📁 Choose Excel File</label>
+        <label for="fileInput" class="file-label">
+          <i class="fas fa-cloud-upload-alt"></i>
+          Choose Excel File
+        </label>
         <span id="fileName" class="file-name">No file chosen</span>
       </div>      
     </div>
 
-    <button type="submit">Upload</button>
+    <div style="text-align: center;">
+      <button type="submit" class="btn">
+        <i class="fas fa-upload"></i>
+        Upload & Import
+      </button>
+    </div>
   </form>
 
-  <div style="margin-top: 2rem; background-color: #f1f5f9; padding: 1rem; border-radius: 8px;">
-    <p><strong>Expected Excel Format:</strong></p>
-    <ul style="padding-left: 1.2rem;">
-      <li><code>Full Name</code></li>
-      <li><code>Matric Number</code></li>
-      <li><code>Project Topic</code></li>
-      <li><code>Department</code></li>
+  <div class="info-box">
+    <h3>
+      <i class="fas fa-info-circle"></i>
+      Expected Excel Format
+    </h3>
+    <p>Your Excel file should have the following columns in the first row:</p>
+    <ul style="padding-left: 1.5rem; margin: 1rem 0;">
+      <li><code>Full Name</code> - Student's complete name</li>
+      <li><code>Matric Number</code> - Student's matriculation number</li>
+      <li><code>Project Topic</code> - Title of their project</li>
+      <li><code>Department</code> - Academic department</li>
     </ul>
-    <p>The first row should contain these headers. Data should start from the second row.</p>
+    <div style="background: var(--primary-200); padding: 1rem; border-radius: var(--radius-md); margin-top: 1rem;">
+      <p style="margin: 0; font-weight: 600;">
+        <i class="fas fa-lightbulb"></i>
+        <strong>Important:</strong> The first row should contain these headers exactly as shown above. Data should start from the second row.
+      </p>
+    </div>
   </div>
 </div>
 {% endblock %}

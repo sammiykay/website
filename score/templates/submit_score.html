@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align: center; margin-bottom: 2rem; font-weight: 600;">Submit Student Evaluation</h2>
+<div class="card-header">
+  <h1 class="card-title">
+    <i class="fas fa-plus-circle"></i>
+    Submit Student Evaluation
+  </h1>
+</div>
 
 {% if messages %}
   <ul class="messages">
@@ -11,54 +16,132 @@
   </ul>
 {% endif %}
 
-<form method="post" style="max-width: 700px; margin: auto;">
+<form method="post" style="max-width: 800px; margin: auto;">
   {% csrf_token %}
-  <div style="margin-bottom: 1.5rem;">
-    <label for="id_student"><strong>Select Student (Matric Number)</strong></label><br>
-    {{ form.student }}
+  
+  <div class="form-group">
+    <label for="id_student" class="form-label">
+      <i class="fas fa-user-graduate"></i>
+      Select Student (Matric Number)
+    </label>
+    <select name="student" id="id_student" class="form-control" required>
+      <option value="">Choose a student...</option>
+      {% for choice in form.student.field.choices %}
+        {% if choice.0 %}
+          <option value="{{ choice.0 }}" {% if form.student.value == choice.0 %}selected{% endif %}>
+            {{ choice.1 }}
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
-    <div>
-      <label for="id_introduction">Introduction / Background (5)</label>
-      {{ form.introduction }}
+  <div class="form-grid form-grid-2">
+    <div class="form-group">
+      <label for="id_introduction" class="form-label">
+        <i class="fas fa-book-open"></i>
+        Introduction / Background
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="introduction" id="id_introduction" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.introduction.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_problem_statement">Statement of Problem / Research Gap (5)</label>
-      {{ form.problem_statement }}
+    
+    <div class="form-group">
+      <label for="id_problem_statement" class="form-label">
+        <i class="fas fa-exclamation-triangle"></i>
+        Statement of Problem / Research Gap
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="problem_statement" id="id_problem_statement" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.problem_statement.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_objectives">Aim & Objectives (5)</label>
-      {{ form.objectives }}
+    
+    <div class="form-group">
+      <label for="id_objectives" class="form-label">
+        <i class="fas fa-bullseye"></i>
+        Aim & Objectives
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="objectives" id="id_objectives" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.objectives.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_methodology">Methodology (5)</label>
-      {{ form.methodology }}
+    
+    <div class="form-group">
+      <label for="id_methodology" class="form-label">
+        <i class="fas fa-cogs"></i>
+        Methodology
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="methodology" id="id_methodology" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.methodology.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_architecture">Model / Architecture (5)</label>
-      {{ form.architecture }}
+    
+    <div class="form-group">
+      <label for="id_architecture" class="form-label">
+        <i class="fas fa-sitemap"></i>
+        Model / Architecture
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="architecture" id="id_architecture" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.architecture.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_significance">Significance / Expected Contribution (5)</label>
-      {{ form.significance }}
+    
+    <div class="form-group">
+      <label for="id_significance" class="form-label">
+        <i class="fas fa-star"></i>
+        Significance / Expected Contribution
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="significance" id="id_significance" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.significance.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_related_works">Related Works (5)</label>
-      {{ form.related_works }}
+    
+    <div class="form-group">
+      <label for="id_related_works" class="form-label">
+        <i class="fas fa-link"></i>
+        Related Works
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="related_works" id="id_related_works" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.related_works.value|default:'' }}">
     </div>
-    <div>
-      <label for="id_design_analysis">Design / Analysis (5)</label>
-      {{ form.design_analysis }}
+    
+    <div class="form-group">
+      <label for="id_design_analysis" class="form-label">
+        <i class="fas fa-drafting-compass"></i>
+        Design / Analysis
+        <span style="color: var(--primary-500); font-weight: 700;">(5 pts)</span>
+      </label>
+      <input type="number" name="design_analysis" id="id_design_analysis" class="form-control" 
+             min="0" max="5" step="0.5" placeholder="0 - 5" 
+             value="{{ form.design_analysis.value|default:'' }}">
     </div>
-    <div style="grid-column: span 2;">
-      <label for="id_implementation">Implementation / Result (10)</label><br>
-      {{ form.implementation }}
-    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="id_implementation" class="form-label">
+      <i class="fas fa-code"></i>
+      Implementation / Result
+      <span style="color: var(--primary-500); font-weight: 700;">(10 pts)</span>
+    </label>
+    <input type="number" name="implementation" id="id_implementation" class="form-control" 
+           min="0" max="10" step="0.5" placeholder="0 - 10" 
+           value="{{ form.implementation.value|default:'' }}">
   </div>
 
   <div style="text-align: center; margin-top: 2rem;">
-    <button type="submit">Submit Score</button>
+    <button type="submit" class="btn">
+      <i class="fas fa-paper-plane"></i>
+      Submit Evaluation
+    </button>
   </div>
 </form>
 {% endblock %}

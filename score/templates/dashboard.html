@@ -1,67 +1,107 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align: center; margin-bottom: 2rem; font-weight: 600;">Coordinator Dashboard</h2>
+<div class="card-header">
+  <h1 class="card-title">
+    <i class="fas fa-tachometer-alt"></i>
+    Coordinator Dashboard
+  </h1>
+</div>
 
-<div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-    <a href="{% url 'download_results' %}">
-        <button style="background-color: #047857;">⬇ Download Scores (CSV)</button>
-    </a>
-    <a href="{% url 'import_students' %}">
-        <button style="background-color: #9333ea;">⬆ Import Students</button>
-    </a>
+<div class="action-buttons">
+  <a href="{% url 'download_results' %}" class="btn btn-success">
+    <i class="fas fa-download"></i>
+    Download Scores (CSV)
+  </a>
+  <a href="{% url 'import_students' %}" class="btn btn-warning">
+    <i class="fas fa-upload"></i>
+    Import Students
+  </a>
 </div>
 
 {% if page_obj %}
-<div style="overflow-x: auto;">
-    <table
-        style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f1f5f9;">
-            <tr>
-                <th>#</th>
-                <th>Matric Number</th>
-                <th>Full Name</th>
-                <th>Department</th>
-                <th>Project Topic</th>
-                <th>Total Score</th>
-                <th>Lecturers Remaining</th> <!-- ✅ New Column -->
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for result in page_obj %}
-            <tr style="border-top: 1px solid #e5e7eb; background-color: {% cycle '#ffffff' '#f9fafb' %};">
-                <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
-                <td>{{ result.matric_number }}</td>
-                <td>{{ result.full_name }}</td>
-                <td>{{ result.department }}</td>
-                <td>{{ result.project_topic }}</td>
-                <td><strong>{{ result.total_score }}</strong></td>
-                <td style="color: {% if result.remaining == 0 %}green{% else %}red{% endif %};">
-                    {{ result.remaining }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
-    <div style="margin-top: 1.5rem; text-align: center;">
-  <div style="display: inline-flex; gap: 0.5rem;">
-    {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}"><button>&laquo; Prev</button></a>
-    {% endif %}
-
-    <span style="padding: 0.5rem 1rem;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}"><button>Next &raquo;</button></a>
-    {% endif %}
-  </div>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th><i class="fas fa-hashtag"></i> #</th>
+        <th><i class="fas fa-id-card"></i> Matric Number</th>
+        <th><i class="fas fa-user"></i> Full Name</th>
+        <th><i class="fas fa-building"></i> Department</th>
+        <th><i class="fas fa-project-diagram"></i> Project Topic</th>
+        <th><i class="fas fa-star"></i> Total Score</th>
+        <th><i class="fas fa-users"></i> Lecturers Remaining</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in page_obj %}
+      <tr>
+        <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+        <td>
+          <code style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.8rem;">
+            {{ result.matric_number }}
+          </code>
+        </td>
+        <td>
+          <div style="font-weight: 600;">{{ result.full_name }}</div>
+        </td>
+        <td>
+          <span style="color: var(--gray-600); font-size: 0.875rem;">{{ result.department }}</span>
+        </td>
+        <td>
+          <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ result.project_topic }}">
+            {{ result.project_topic }}
+          </div>
+        </td>
+        <td>
+          <span style="font-size: 1.125rem; font-weight: 700; color: var(--primary-600);">
+            {{ result.total_score }}
+          </span>
+        </td>
+        <td>
+          {% if result.remaining == 0 %}
+            <span class="status-badge status-complete">
+              <i class="fas fa-check-circle"></i> Complete
+            </span>
+          {% else %}
+            <span class="status-badge status-pending">
+              <i class="fas fa-clock"></i> {{ result.remaining }} remaining
+            </span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-</div>
 
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">
+      <button class="btn btn-secondary">
+        <i class="fas fa-chevron-left"></i>
+        Previous
+      </button>
+    </a>
+  {% endif %}
+  
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">
+      <button class="btn btn-secondary">
+        Next
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </a>
+  {% endif %}
+</div>
 
 {% else %}
-<p style="text-align: center; color: #6b7280;">No student evaluations found yet.</p>
+<div style="text-align: center; padding: 3rem; color: var(--gray-500);">
+  <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; color: var(--gray-400);"></i>
+  <p style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">No student evaluations found yet</p>
+  <p style="font-size: 0.875rem;">Import students first to get started</p>
+</div>
 {% endif %}
 {% endblock %}

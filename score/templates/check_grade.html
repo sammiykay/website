@@ -1,35 +1,86 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align: center; margin-bottom: 2rem;">Check Your Project Grade</h2>
+<div class="card-header">
+  <h1 class="card-title">
+    <i class="fas fa-search"></i>
+    Check Your Project Grade
+  </h1>
+</div>
 
 <div style="max-width: 500px; margin: auto;">
   <form method="post">
     {% csrf_token %}
-    <label for="matric_number">Enter Your Matric Number</label>
-    <input type="text" name="matric_number" id="matric_number" placeholder="e.g. AKG200813001" required>
-    <button type="submit">Check Grade</button>
+    <div class="form-group">
+      <label for="matric_number" class="form-label">
+        <i class="fas fa-id-card"></i>
+        Enter Your Matric Number
+      </label>
+      <input type="text" name="matric_number" id="matric_number" class="form-control" 
+             placeholder="e.g. AKG200813001" required>
+    </div>
+    
+    <div style="text-align: center;">
+      <button type="submit" class="btn">
+        <i class="fas fa-search"></i>
+        Check Grade
+      </button>
+    </div>
   </form>
 
   {% if error %}
-    <p style="color: red; margin-top: 1rem;">{{ error }}</p>
+    <div class="messages" style="margin-top: 1rem;">
+      <li>{{ error }}</li>
+    </div>
   {% endif %}
 
   {% if result %}
-  <div style="margin-top: 2rem; background-color: #f1f5f9; padding: 1rem; border-radius: 8px;">
-    <p><strong>Full Name:</strong> {{ result.full_name }}</p>
-    <p><strong>Matric Number:</strong> {{ result.matric_number }}</p>
-    <p><strong>Department:</strong> {{ result.department }}</p>
-    <p><strong>Project Topic:</strong> {{ result.project_topic }}</p>
-    <p><strong>Total Score:</strong>
-      {% if result.total_score == "Awaiting Result" %}
-        <span style="color: #b45309;">Awaiting Result</span>
-      {% else %}
-        <span style="font-size: 1.2rem; font-weight: bold;">{{ result.total_score }}</span>
-      {% endif %}
-    </p>
+  <div class="result-card">
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <i class="fas fa-user-graduate" style="font-size: 3rem; color: var(--primary-500); margin-bottom: 1rem;"></i>
+      <h2 style="margin: 0; color: var(--gray-800);">{{ result.full_name }}</h2>
+    </div>
+    
+    <div style="display: grid; gap: 1rem;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <i class="fas fa-id-card" style="color: var(--primary-500); width: 20px;"></i>
+        <span><strong>Matric Number:</strong></span>
+        <code style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.875rem; margin-left: auto;">
+          {{ result.matric_number }}
+        </code>
+      </div>
+      
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <i class="fas fa-building" style="color: var(--primary-500); width: 20px;"></i>
+        <span><strong>Department:</strong></span>
+        <span style="margin-left: auto; color: var(--gray-600);">{{ result.department }}</span>
+      </div>
+      
+      <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+        <i class="fas fa-project-diagram" style="color: var(--primary-500); width: 20px; margin-top: 0.25rem;"></i>
+        <span><strong>Project Topic:</strong></span>
+        <span style="margin-left: auto; text-align: right; color: var(--gray-600); max-width: 60%;">{{ result.project_topic }}</span>
+      </div>
+      
+      <div style="display: flex; align-items: center; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
+        <i class="fas fa-star" style="color: var(--primary-500); width: 20px;"></i>
+        <span><strong>Total Score:</strong></span>
+        <span style="margin-left: auto;">
+          {% if result.total_score == "Awaiting Result" %}
+            <span style="color: var(--warning-600); font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-clock"></i>
+              Awaiting Result
+            </span>
+          {% else %}
+            <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-600); display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-trophy"></i>
+              {{ result.total_score }}
+            </span>
+          {% endif %}
+        </span>
+      </div>
+    </div>
   </div>
-{% endif %}
-
+  {% endif %}
 </div>
 {% endblock %}
